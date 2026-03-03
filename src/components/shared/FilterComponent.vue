@@ -1,0 +1,310 @@
+<template>
+  <div
+    class="d-flex flex-column overflow-hidden"
+    style="width: 90vw; max-width: 1800px; height: 90vh; border-radius: 25px; border: 1px solid;"
+    :style="isDark
+      ? 'background: #0f172a; border-color: rgba(255,255,255,0.1);'
+      : 'background: #ffffff; border-color: #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.08);'"
+  >
+
+    <!-- TOP BAR -->
+    <div
+      class="px-8 py-4 d-flex justify-space-between align-center"
+      style="border-bottom: 1px solid; flex-shrink: 0;"
+      :style="isDark
+        ? 'background: rgba(100,116,139,0.05); border-color: rgba(255,255,255,0.05);'
+        : 'background: #ffffff; border-color: #e2e8f0;'"
+    >
+      <div>
+        <h2
+          class="text-h5 font-weight-black text-uppercase"
+          style="letter-spacing: -0.01em;"
+          :class="isDark ? 'text-white' : 'text-grey-darken-2'"
+        >
+          Advanced Parameters
+        </h2>
+        <p class="font-weight-black text-uppercase text-blue" style="font-size: 10px; letter-spacing: 0.1em;">
+          Fine-tune your search results
+        </p>
+      </div>
+
+      <div class="d-flex align-end ga-4">
+        <SelectField label="Pre-Defined Filters" :options="[]" :theme="theme" />
+        <InputField label="Name" placeholder="" :theme="theme" type="number" />
+        <v-btn
+          color="blue-darken-1"
+          variant="elevated"
+          class="font-weight-black text-uppercase rounded-xl"
+          style="min-width: 288px; letter-spacing: 0.1em; font-size: 0.7rem; border-radius: 16px; box-shadow: 0 4px 16px rgba(37,99,235,0.2);"
+        >
+          Save Filter
+        </v-btn>
+      </div>
+
+      <div class="d-flex ga-4">
+        <v-btn
+          variant="text"
+          class="font-weight-black text-uppercase text-grey rounded-xl ga-2"
+          style="letter-spacing: 0.1em; font-size: 0.7rem; border-radius: 16px;"
+        >
+          <RotateCcw :size="16" class="mr-2" /> Clear All
+        </v-btn>
+        <v-btn
+          color="blue-darken-1"
+          variant="elevated"
+          class="font-weight-black text-uppercase rounded-xl px-8"
+          style="letter-spacing: 0.1em; font-size: 0.7rem; border-radius: 16px; box-shadow: 0 4px 16px rgba(37,99,235,0.2);"
+        >
+          Apply Filters
+        </v-btn>
+      </div>
+    </div>
+
+    <!-- SCROLLABLE CONTENT -->
+    <div
+      class="overflow-y-auto pa-10 d-flex flex-column ga-12"
+      style="flex: 1;"
+      :style="isDark ? 'background: rgba(15,23,42,0.5);' : ''"
+    >
+
+      <!-- GROUP 1: Assignment & Status -->
+      <section class="d-flex flex-column ga-6">
+        <div class="d-flex justify-space-between align-center">
+          <h4 class="text-caption font-weight-black text-uppercase text-blue d-flex align-center ga-2" style="letter-spacing: 0.3em;">
+            <div class="rounded-pill bg-blue" style="height: 4px; width: 16px;" />
+            Assignment & Status
+          </h4>
+          <SelectField label="Open Status" :options="[]" :theme="theme" />
+        </div>
+
+        <v-row>
+          <v-col v-for="label in multiSelects" :key="label" cols="12" md="4" lg="3">
+            <MultiSearchSelect :label="label" :theme="theme" />
+          </v-col>
+          <v-col v-for="item in statusSelects" :key="item.label" cols="12" md="4" lg="3">
+            <SelectField :label="item.label" :options="[]" :theme="theme" />
+          </v-col>
+        </v-row>
+      </section>
+
+      <!-- GROUP 2: Consent & Compliance -->
+      <section class="d-flex flex-column ga-6">
+        <h4 class="text-caption font-weight-black text-uppercase text-green d-flex align-center ga-2" style="letter-spacing: 0.3em;">
+          <div class="rounded-pill bg-green" style="height: 4px; width: 16px;" />
+          Consent & Compliance
+        </h4>
+
+        <v-row>
+          <v-col cols="12" md="6" lg="3">
+            <div
+              class="px-6 py-3 d-flex flex-column ga-4"
+              style="border-radius: 15px; border: 1px solid;"
+              :style="isDark
+                ? 'background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.05);'
+                : 'background: #f0f9ff; border-color: rgba(37,99,235,0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.06);'"
+            >
+              <CheckboxField v-for="l in consentGroup1" :key="l" :label="l" :theme="theme" />
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" lg="3">
+            <div
+              class="px-6 py-3 d-flex flex-column ga-4"
+              style="border-radius: 15px; border: 1px solid;"
+              :style="isDark
+                ? 'background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.05);'
+                : 'background: #f0f9ff; border-color: rgba(37,99,235,0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.06);'"
+            >
+              <CheckboxField v-for="l in consentGroup2" :key="l" :label="l" :theme="theme" />
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" lg="3">
+            <div
+              class="px-6 py-3 d-flex flex-column ga-4"
+              style="border-radius: 15px; border: 1px solid;"
+              :style="isDark
+                ? 'background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.05);'
+                : 'background: #f0f9ff; border-color: rgba(37,99,235,0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.06);'"
+            >
+              <CheckboxField v-for="l in consentGroup3" :key="l" :label="l" :theme="theme" />
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" lg="3">
+            <div
+              class="px-6 py-3 d-flex flex-column ga-4"
+              style="border-radius: 15px; border: 1px solid;"
+              :style="isDark
+                ? 'background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.05);'
+                : 'background: #f0f9ff; border-color: rgba(37,99,235,0.5); box-shadow: 0 1px 3px rgba(0,0,0,0.06);'"
+            >
+              <CheckboxField v-for="l in consentGroup4" :key="l" :label="l" :theme="theme" />
+            </div>
+          </v-col>
+        </v-row>
+      </section>
+
+      <!-- GROUP 3: Date & Range Tracking -->
+      <section class="d-flex flex-column ga-6">
+        <h4 class="text-caption font-weight-black text-uppercase text-amber d-flex align-center ga-2" style="letter-spacing: 0.3em;">
+          <div class="rounded-pill bg-amber" style="height: 4px; width: 16px;" />
+          Date & Range Tracking
+        </h4>
+
+        <v-row>
+          <v-col v-for="label in fromToDates" :key="label" cols="12" md="6" lg="auto" style="flex: 1;">
+            <FromToDate :label="label" :theme="theme" />
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <DateField label="No Payment Made Since" :theme="theme" />
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <InputField label="Acc Not Worked in X Days" placeholder="" :theme="theme" type="number" />
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <InputField label="No Disposition in X Days" placeholder="" :theme="theme" type="number" />
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <InputField label="Days Assigned" placeholder="" :theme="theme" type="number" />
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <div class="d-flex align-end ga-2">
+              <SelectField
+                label="Account Age"
+                :options="[{value:'less',label:'Less Than'},{value:'greater',label:'Greater Than'}]"
+                :theme="theme"
+              />
+              <InputField label="" placeholder="" :theme="theme" type="number" />
+            </div>
+          </v-col>
+        </v-row>
+      </section>
+
+      <!-- GROUP 4: Financial Limits & Sorting -->
+      <section class="d-flex flex-column ga-6">
+        <h4 class="text-caption font-weight-black text-uppercase text-purple d-flex align-center ga-2" style="letter-spacing: 0.3em;">
+          <div class="rounded-pill bg-purple" style="height: 4px; width: 16px;" />
+          Financial Limits & Sorting
+        </h4>
+
+        <v-row>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <FromToDate label="Amount Due" :theme="theme" />
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <div class="d-flex align-end ga-4 position-relative">
+              <span
+                class="position-absolute text-body-2 font-weight-medium"
+                style="top: 0; letter-spacing: 0.1em;"
+                :class="isDark ? 'text-cyan-lighten-2' : 'text-blue-darken-1'"
+              >
+                Total Amount
+              </span>
+              <InputField label="" placeholder="" :theme="theme" type="number" />
+              <span class="text-grey-darken-1 d-flex align-center font-weight-bold">-</span>
+              <InputField label="" placeholder="" :theme="theme" type="number" />
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <FromToDate label="Charge Off Date" :theme="theme" />
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <FromToDate label="Last Payment" :theme="theme" />
+          </v-col>
+          <v-col cols="12" md="6" lg="auto" style="flex: 1;">
+            <div class="d-flex align-end ga-4 position-relative">
+              <span
+                class="position-absolute text-body-2 font-weight-medium"
+                style="top: 0; letter-spacing: 0.1em;"
+                :class="isDark ? 'text-cyan-lighten-2' : 'text-blue-darken-1'"
+              >
+                Cumulative Delinquent Days
+              </span>
+              <InputField label="" placeholder="" :theme="theme" type="number" />
+              <span class="text-grey-darken-1 d-flex align-center font-weight-bold">-</span>
+              <InputField label="" placeholder="" :theme="theme" type="number" />
+            </div>
+          </v-col>
+        </v-row>
+      </section>
+
+      <!-- GROUP 5: Custom Logic & Sorting -->
+      <section
+        class="pa-8"
+        style="border-radius: 30px; border: 2px dashed;"
+        :style="isDark
+          ? 'border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.02);'
+          : 'border-color: #e2e8f0; background: rgba(248,250,252,0.5);'"
+      >
+        <v-row align="end">
+          <v-col cols="12" lg="4">
+            <SelectField label="Select Custom Field" :options="[]" :theme="theme" />
+          </v-col>
+          <v-col cols="12" lg="4">
+            <SelectField
+              label="Order Results By"
+              :options="[{value:'date',label:'Date Received'},{value:'amt',label:'Total Amount'},{value:'name',label:'Debtor Name'}]"
+              :theme="theme"
+            />
+          </v-col>
+          <v-col cols="12" lg="4">
+            <SelectField
+              label="Sort Direction"
+              :options="[{value:'asc',label:'Ascending (A-Z)'},{value:'desc',label:'Descending (Z-A)'}]"
+              :theme="theme"
+            />
+          </v-col>
+        </v-row>
+      </section>
+
+    </div>
+  </div>
+</template>
+
+<script>
+import { computed } from 'vue'
+import { RotateCcw } from 'lucide-vue-next'
+import SelectField from './SelectField.vue'
+import InputField from './InputField.vue'
+import MultiSearchSelect from './MultiSearchSelect.vue'
+import CheckboxField from './CheckboxField.vue'
+import FromToDate from './FromToDate.vue'
+import DateField from './DateField.vue'
+
+export default {
+  name: 'FilterComponent',
+
+  components: { RotateCcw, SelectField, InputField, MultiSearchSelect, CheckboxField, FromToDate, DateField },
+
+  props: {
+    theme: { type: String, default: 'light' },
+  },
+
+  setup(props) {
+    const isDark = computed(() => props.theme === 'dark')
+
+    const multiSelects = [
+      'Collectors', 'Co-Collectors', 'Creditors', 'Clients',
+      'Action Codes', 'Legal Status', 'Main Status', 'Sub-Status',
+      'Sub-Sub-Status', 'Queues', 'Collection Status', 'Sales Rep', 'State/Province',
+    ]
+
+    const statusSelects = [
+      { label: 'Account Type' }, { label: 'Email Type' },
+      { label: 'Letter Flows' }, { label: 'Generated Documents' },
+      { label: 'Skip Trace Type' }, { label: 'Debtor Type' },
+    ]
+
+    const consentGroup1 = ['Email Consent', 'Address Consent', 'Phone Voice Consent', 'Phone SMS Consent']
+    const consentGroup2 = ['Cell Voice Consent', 'Cell SMS Consent', 'Work Phone Voice Consent', 'Work Phone SMS Consent', 'Skip Trace is Marked']
+    const consentGroup3 = ['OTH Phone Voice Consent', 'OTH Phone SMS Consent', 'Fax Voice Consent', 'Fax SMS Consent']
+    const consentGroup4 = ['Overdue Work Date', 'Has Not Generated Docs', 'No Active Reminders', 'Overdue Reminders', 'Report to Credit Bureau']
+
+    const fromToDates = ['Originated Date', 'Account Received', 'Next Work Date', 'Last Updated', 'Last Skip Traced', 'Reminder Due']
+
+    return {
+      isDark, multiSelects, statusSelects,
+      consentGroup1, consentGroup2, consentGroup3, consentGroup4,
+      fromToDates,
+    }
+  },
+}
+</script>

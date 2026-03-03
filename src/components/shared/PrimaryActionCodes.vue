@@ -1,0 +1,65 @@
+<template>
+  <div
+    :class="['d-flex justify-center align-center ga-3 overflow-x-auto flex-shrink-0 px-8 py-3', className]"
+    style="border-top: 1px solid; border-bottom: 1px solid; flex-shrink: 0;"
+    :style="isDark
+      ? 'background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.05);'
+      : 'background: transparent; border-color: #cbd5e1; box-shadow: 0 4px 16px rgba(15,23,42,0.15);'"
+  >
+    <v-btn
+      v-for="action in primaryActionCodes"
+      :key="action.code"
+      :color="action.color"
+      variant="flat"
+      rounded="pill"
+      class="text-white font-weight-black text-uppercase action-btn"
+      style="letter-spacing: 0.15em; font-size: 1.1rem;"
+    >
+      {{ action.label }}
+    </v-btn>
+  </div>
+</template>
+
+<script>
+import { computed } from 'vue'
+
+export default {
+  name: 'PrimaryActionCodes',
+
+  props: {
+    theme: {
+      type: String,
+      default: 'light',
+    },
+    className: {
+      type: String,
+      default: '',
+    },
+  },
+
+  setup(props) {
+    const isDark = computed(() => props.theme === 'dark')
+
+    const primaryActionCodes = [
+      { code: 'CALL',  label: 'DO NOT CALL',        color: 'red-darken-2'   },
+      { code: 'SMS',   label: 'EMAILS ONLY',         color: 'lime-darken-1'  },
+      { code: 'EMAIL', label: 'ENFORCE JUDGEMENT',   color: 'amber-darken-1' },
+      { code: 'PTP',   label: 'ABC',                 color: 'green-darken-2' },
+    ]
+
+    return { isDark, primaryActionCodes }
+  },
+}
+</script>
+
+<style scoped>
+.action-btn {
+  transition: filter 0.2s, transform 0.1s;
+}
+.action-btn:hover {
+  filter: brightness(1.1);
+}
+.action-btn:active {
+  transform: scale(0.95);
+}
+</style>
