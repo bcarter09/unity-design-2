@@ -228,46 +228,36 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed } from 'vue'
 import { Briefcase, PenLine, Phone, Smartphone, User } from 'lucide-vue-next'
 
-export default {
-  name: 'ContactInfoMenu',
+const props = defineProps({
+  theme: { type: String, default: 'light' },
+})
 
-  components: { Briefcase, PenLine, Phone, Smartphone, User },
+const isDark = computed(() => props.theme === 'dark')
 
-  props: {
-    theme: { type: String, default: 'light' },
+const addresses = [
+  { id: 'home1', addr: '498 Elm Ave, San Bruno, CA 94066',              status: 'Good',    type: 'Home' },
+  { id: 'home2', addr: '269 EL Camino Real, San Francisco, CA 94080',   status: 'Unknown', type: 'Work' },
+]
+
+const phones = computed(() => [
+  {
+    id: 'ph1', label: 'From Experian', num: '415-310-1981', status: 'Bad',
+    icon: Phone,
+    colorStyle: isDark.value ? 'color: #48c78e;' : 'color: #16a34a;',
   },
-
-  setup(props) {
-    const isDark = computed(() => props.theme === 'dark')
-
-    const addresses = [
-      { id: 'home1', addr: '498 Elm Ave, San Bruno, CA 94066',              status: 'Good',    type: 'Home' },
-      { id: 'home2', addr: '269 EL Camino Real, San Francisco, CA 94080',   status: 'Unknown', type: 'Work' },
-    ]
-
-    const phones = computed(() => [
-      {
-        id: 'ph1', label: 'From Experian', num: '415-310-1981', status: 'Bad',
-        icon: Phone,
-        colorStyle: isDark.value ? 'color: #48c78e;' : 'color: #16a34a;',
-      },
-      {
-        id: 'ph2', label: 'From IDI', num: '415-310-4188', status: 'Good',
-        icon: Smartphone,
-        colorStyle: isDark.value ? 'color: #fb923c;' : 'color: #ea580c;',
-      },
-    ])
-
-    const emails = [
-      { id: 'em1', mail: 'boracaygarden@att.net',  status: 'Good' },
-      { id: 'em2', mail: 'hyattgirl55@yahoo.com',  status: 'Bad'  },
-    ]
-
-    return { isDark, addresses, phones, emails }
+  {
+    id: 'ph2', label: 'From IDI', num: '415-310-4188', status: 'Good',
+    icon: Smartphone,
+    colorStyle: isDark.value ? 'color: #fb923c;' : 'color: #ea580c;',
   },
-}
+])
+
+const emails = [
+  { id: 'em1', mail: 'boracaygarden@att.net',  status: 'Good' },
+  { id: 'em2', mail: 'hyattgirl55@yahoo.com',  status: 'Bad'  },
+]
 </script>
